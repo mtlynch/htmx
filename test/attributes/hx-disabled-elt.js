@@ -80,4 +80,23 @@ describe('hx-disabled-elt attribute', function() {
     b2.hasAttribute('disabled').should.equal(false)
     b3.hasAttribute('disabled').should.equal(false)
   })
+
+  it('multiple elts can be disabled with find', function() {
+    this.server.respondWith('GET', '/test', 'Clicked!')
+    var b1 = make('<button hx-get="/test" hx-disabled-elt="find #b2, find #b3">Click Me!</button>')
+    var b2 = make('<button id="b2">Click Me!</button>')
+    var b3 = make('<button id="b3">Demo</button>')
+
+    b2.hasAttribute('disabled').should.equal(false)
+    b3.hasAttribute('disabled').should.equal(false)
+
+    b1.click()
+    b2.hasAttribute('disabled').should.equal(true)
+    b3.hasAttribute('disabled').should.equal(true)
+
+    this.server.respond()
+
+    b2.hasAttribute('disabled').should.equal(false)
+    b3.hasAttribute('disabled').should.equal(false)
+  })
 })
